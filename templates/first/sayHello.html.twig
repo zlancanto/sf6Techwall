@@ -11,6 +11,8 @@
 <div>
     <p>The date today is : {{ "now"| date('d/m/Y') }}</p>
     <h1>Hello {{ name| upper }} {{ firstname | capitalize }} !</h1>
+    {# ~ = concaténation en twig #}
+    <img src="{{ asset('assets/images/') ~ image | defaultImage }}" alt="">
 </div>
 </body>
 </html>

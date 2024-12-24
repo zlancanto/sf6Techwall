@@ -37,6 +37,7 @@ class FirstController extends AbstractController
         return $this->render('first/sayHello.html.twig', [
             'name' => $name,
             'firstname' => $firstname,
+            'image' => '               '
         ]);
     }
 
