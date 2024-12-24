@@ -65,9 +65,4 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('app_todo');
     }
 
-    /*#[Route('/todo/remove/{key}/{value}', name: 'app_todo_remove')]
-    public function removeFromTodo(Request $request, $key, $value): Response
-    {
-        $session = $request->getSession();
-    }*/
 }
