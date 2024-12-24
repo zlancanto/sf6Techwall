@@ -7,9 +7,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/todo')] // Préfixe
 class TodoController extends AbstractController
 {
-    #[Route('/todo', name: 'app_todo')]
+    #[Route('/', name: 'app_todo')]
     public function index(Request $request): Response
     {
         $session = $request->getSession();
@@ -19,33 +20,44 @@ class TodoController extends AbstractController
          * */
         if (!$session->has('todos'))
         {
-            $session->set('todos', [
+            $todos = [
                 'achat' => 'Acheter clé USB',
                 'cours' => 'Finaliser mon cours',
                 'correction' => 'Corriger mes examens'
-            ]);
-            $this->addFlash('info', 'Innitialisation de todo réussie');
+            ];
+            $session->set('todos', $todos);
+            $this->addFlash('info', 'Initialisation de todo réussie');
         }
         //Si j'ai déjà un tableau de todo dans ma session, je ne fais que l'afficher
 
         return $this->render('todo/index.html.twig');
     }
 
-    #[Route('/todo/add/{key}/{value}', name: 'app_todo_add')]
+    #[Route('/add/{key}/{value?Nothing}',
+        name: 'app_todo_add',
+        /* Valeur par défaut d'un attribut
+         * Toujours commencer par la valeur la plus à droite
+         * key peut avoir une val par déf que lorsque value a une val par déf
+         * conclusion : un param peut avoir une val par déf que ssi tous ses
+         * params de droite ont chacunes une val par déf
+        defaults: ['value' => 'Nothing']*/
+    )]
     public function addToDo(Request $request, $key, $value): Response
     {
         $session = $request->getSession();
         if ($session->has('todos') &&
-            $session->get('todos')->contains($key))
+            array_key_exists($key, $session->get('todos')) )
         {
             // Message d'erreur
             $this->addFlash('error', 'Ce todo existe déjà');
         }elseif ($session->has('todos') &&
-            !$session->get('todos')->contains($key))
+            !array_key_exists($key, $session->get('todos')) )
         {
             // Créer key
-            $session->get('todos')->add($key, $value);
-            $this->addFlash('info', 'Valeur ajoutée avec succès');
+            $todos = $session->get('todos');
+            $todos[$key] = $value;
+            $session->set('todos', $todos);
+            $this->addFlash('success', "todo d'id $key ajouté avec succès");
         }else
         {
             $this->addFlash('error', 'Liste des todos non encore initialisée');
@@ -53,21 +65,9 @@ class TodoController extends AbstractController
         return $this->redirectToRoute('app_todo');
     }
 
-    #[Route('/todo/remove/{key}/{value}', name: 'app_todo_remove')]
+    /*#[Route('/todo/remove/{key}/{value}', name: 'app_todo_remove')]
     public function removeFromTodo(Request $request, $key, $value): Response
     {
         $session = $request->getSession();
-        if (!$session->has('todos'))
-        {
-            $session->set('todos', [
-                'achat' => 'Acheter mon cours',
-                'cours' => 'Finaliser mon cours',
-                'correction' => 'Corriger mes examens'
-            ]);
-        }
-        $todos = $session->get('todos');
-        $todos->remove($key, $value);
-        $session->set('todos', $todos);
-        return $this->render('todo/index.html.twig');
-    }
+    }*/
 }
