@@ -6,6 +6,10 @@
 
 {% block body %}
     {{ include('fragment/date-day.html.twig') }}
+    <div class="alert alert-warning">
+        {# Lien avec param #}
+        <a href="{{ path('app_tab', {number: 7}) }}">Lien vers tab/ : Stats Table</a>
+    </div>
     <table class="table">
         <tr class="table-active">
             <th>Name</th>
