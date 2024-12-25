@@ -1,14 +1,24 @@
 {% extends 'template.html.twig' %}
 
-{% block title %}Person{% endblock %}
+{% block title %}Persons{% endblock %}
 
-{% block bodyTitle %} Détails Person {% endblock %}
+{% block bodyTitle %} Détails Persons {% endblock %}
 
 {% block body %}
-    {{ dump(person) }}
-    <div class="alert alert-success">
-        <h4>Firstname = {{ person.firstname }}</h4>
-        <h4>Name = {{ person.name }}</h4>
-        <h4>Old = {{ person.old }}</h4>
+    <div class="table-responsive-xxl">
+        <table class="table table-striped table-height-max">
+            <tr>
+                <th>Firstname</th>
+                <th>Name</th>
+                <th>Old</th>
+            </tr>
+            {% for person in persons %}
+                <tr>
+                    <td>{{ person.firstname }}</td>
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.old }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 {% endblock %}
