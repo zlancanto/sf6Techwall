@@ -5,11 +5,13 @@
 {% block bodyTitle %} Users {% endblock %}
 
 {% block body %}
+    {{ include('fragment/date-day.html.twig') }}
     <table class="table">
         <tr class="table-active">
             <th>Name</th>
             <th>Firstname</th>
             <th>Old</th>
+            <th>Message</th>
         </tr>
         {% for user in users %}
             <tr class="table-{% if loop.index is odd %}danger
@@ -17,6 +19,18 @@
                 <td>{{ user.name }}</td>
                 <td>{{ user.firstname }}</td>
                 <td>{{ user.old }}</td>
+                <td>
+                    {#
+                        Il s'agit d'un include
+                        Le array contient les attr que doit prendre
+                        la fonction sayHello(attr1, attr2)
+                    #}
+                    {{
+                        render(controller('App\\Controller\\FirstController::sayHello',
+                            {'name': user.name, 'firstname': user.firstname}
+                        ))
+                    }}
+                </td>
             </tr>
         {% endfor %}
     </table>

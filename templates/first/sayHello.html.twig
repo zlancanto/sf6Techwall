@@ -1,8 +1,10 @@
-{% extends 'template.html.twig' %}
+{#
+    A un traitement métier
+    Utilise un controller (FirstController)
+#}
+<h1>Hello {{ name| upper }} {{ firstname | capitalize }} !</h1>
 
-{% block body %}
-    <p>The date today is : {{ "now"| date('d/m/Y') }}</p>
-    <h1>Hello {{ name| upper }} {{ firstname | capitalize }} !</h1>
-    {# ~ = concaténation en twig #}
+{#
+    ~ = concaténation en twig
     <img src="{{ asset('assets/images/') ~ image | defaultImage }}" alt="">
-{% endblock %}
+#}
