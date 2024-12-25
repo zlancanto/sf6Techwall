@@ -66,12 +66,18 @@ class PersonController extends AbstractController
             4,
             2
         );*/
+        $nombrePersons = $this->personRepository->count([]);
+        $nombrePages = ceil($nombrePersons / $number);
         $persons = $this->personRepository->findBy([],
             ['firstname' => 'ASC', 'name' => 'ASC'],
             $number,
             ($page-1)*$number);
         return $this->render('person/index.html.twig', [
-            'persons' => $persons
+            'persons' => $persons,
+            'nombrePages' => $nombrePages,
+            'page' => $page,
+            'number' => $number,
+            'isPaginated' => true
         ]);
     }
 }
