@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Person;
 use App\Repository\PersonRepository;
 use App\service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,15 @@ class PersonController extends AbstractController
         private readonly PersonRepository $personRepository
     ){}
 
+    #[Route('/add', name: 'app_person_add')]
+    public function add(): Response
+    {
+        $person = $this->personService->create('Zlanca-Nto', 'MIHAN', 44);
+        return $this->render('person/person.html.twig', [
+            'person' => $person,
+        ]);
+    }
+
     #[Route('/all', name: 'app_person_all')]
     public function index(): Response
     {
@@ -25,12 +35,26 @@ class PersonController extends AbstractController
         ]);
     }
 
-    #[Route('/add', name: 'app_person_add')]
-    public function add(): Response
+    #[Route('/{id<\d+>}', name: 'app_person_by_id')]
+    public function personById(Person $person = null
+        /*
+         * null pour ne pas qu'il y ait d'erreur quand il ne trouve pas l'id
+         * $id sans param-converter
+         * */
+    ): Response
     {
-        $person = $this->personService->create('Zlanca-Nto', 'MIHAN', 44);
-        return $this->render('person/person.html.twig', [
-            'person' => $person,
+        /*
+         * Sans param-converter
+         * $person = $this->personRepository->find($id);
+         * */
+        if (!$person)
+        {
+            /* Pour l'affichage d'une infobulle d'erreurs */
+            $this->addFlash('error', 'Person not found');
+            return $this->redirectToRoute('app_person_all');
+        }
+        return $this->render('person/person-by-id.html.twig', [
+            'person' => $person
         ]);
     }
 }

@@ -1,0 +1,14 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Person{% endblock %}
+
+{% block bodyTitle %} Détails Person Id {% endblock %}
+
+{% block body %}
+    <div class="card w-50">
+        <div class="card-body">
+            <h5 class="card-title">{{ person.firstname }}</h5>
+            <p class="card-text">My name is {{ person.name }} and i'm {{ person.old }} years</p>
+        </div>
+    </div>
+{% endblock %}
