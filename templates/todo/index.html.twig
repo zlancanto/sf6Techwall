@@ -1,25 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'template.html.twig' %}
+
+{% block title %} ToDo {% endblock %}
+
+{% block bodyTitle %}
     <h1>Liste des todos : </h1>
-    {% for message in app.flashes('info') %}
-        {# C'est un commentaire #}
-        <div class="alert alert-info"> {{ message }} </div>
-    {% endfor %}
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success"> {{ message }} </div>
-    {% endfor %}
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger"> {{ message }} </div>
-    {% endfor %}
+{% endblock %}
+
+{% block body %}
     <ol class="list-group">
         {% for key, value in app.session.get('todos') %}
             <li class="list-group-item">
@@ -27,5 +14,4 @@
             </li>
         {% endfor %}
     </ol>
-</body>
-</html>
+{% endblock %}

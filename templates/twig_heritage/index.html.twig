@@ -1,5 +1,8 @@
-{% extends 'heritage.html.twig' %}
-{% block main %}
+{% extends 'template.html.twig' %}
+
+{# L'ordre des blocks n'a aucune importance #}
+
+{% block body %}
     {{ parent() }}
     <p>Le main du TwigHeritage</p>
 {% endblock %}

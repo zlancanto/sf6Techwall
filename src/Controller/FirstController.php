@@ -41,6 +41,12 @@ class FirstController extends AbstractController
         ]);
     }
 
+    #[Route('/template', name: 'app_first_template')]
+    public function template() : Response
+    {
+        return $this->render('template.html.twig', []);
+    }
+
     #[Route('/multiplication/{int1<\d+>}/{int2<\d+>}',
         name: 'app_multiplication',
         /*Les requirements sont des contraintes appliquées aux params

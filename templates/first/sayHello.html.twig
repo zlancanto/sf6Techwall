@@ -1,18 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>StayHello</title>
-</head>
-<body>
-<div>
+{% extends 'template.html.twig' %}
+
+{% block body %}
     <p>The date today is : {{ "now"| date('d/m/Y') }}</p>
     <h1>Hello {{ name| upper }} {{ firstname | capitalize }} !</h1>
     {# ~ = concaténation en twig #}
     <img src="{{ asset('assets/images/') ~ image | defaultImage }}" alt="">
-</div>
-</body>
-</html>
+{% endblock %}
