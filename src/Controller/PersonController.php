@@ -57,4 +57,21 @@ class PersonController extends AbstractController
             'person' => $person
         ]);
     }
+
+    #[Route('/all-by-criteria/{page?1}/{number?10}', name: 'app_person_by_criteria')]
+    public function personByCriteria($page, $number): Response
+    {
+        /*$persons = $this->personRepository->findBy(['firstname' => 'aimé'],
+            ['old' => 'ASC'],
+            4,
+            2
+        );*/
+        $persons = $this->personRepository->findBy([],
+            ['firstname' => 'ASC', 'name' => 'ASC'],
+            $number,
+            ($page-1)*$number);
+        return $this->render('person/index.html.twig', [
+            'persons' => $persons
+        ]);
+    }
 }
