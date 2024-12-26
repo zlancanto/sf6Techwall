@@ -25,6 +25,9 @@ class PersonController extends AbstractController
         $person = new Person();
         /* $person est l'image de notre formulairex */
         $formPerson = $this->createForm(PersonType::class, $person);
+        $formPerson->remove('createdAt')
+            ->remove('updatedAt')
+        ;
 
         //$person = $this->personService->create('Zlanca-Nto', 'MIHAN', 44);
         return $this->render('person/add-person.html.twig', [

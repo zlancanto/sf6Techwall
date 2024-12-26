@@ -5,5 +5,10 @@
 {% block bodyTitle %} Détails Person add {% endblock %}
 
 {% block body %}
-    {{ form(formPerson) }}
+    {{ form_start(formPerson) }}
+    <div class="row">
+        <div class="col-8">{{ form_row(formPerson.firstname) }}</div>
+        <div class="col">{{ form_row(formPerson.name) }}</div>
+    </div>
+    {{ form_rest(formPerson) }}
 {% endblock %}
