@@ -6,6 +6,7 @@ use App\Entity\Person;
 use App\Repository\PersonRepository;
 use App\service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -26,12 +27,46 @@ class PersonController extends AbstractController
         ]);
     }
 
+    #[Route('/delete/{id<\d+>}', name: 'app_person_delete')]
+    public function delete(Person $person = null): RedirectResponse
+    {
+        if (!$person)
+        {
+            $this->addFlash('error', "Impossible d'effectuer cette action");
+        }else
+        {
+            $this->personService->delete($person);
+            $this->addFlash('success', "Suppression effectuée avec succes");
+        }
+        return $this->redirectToRoute('app_person_all');
+    }
+
+    #[Route('/update/{id<\d+>}/{firstname?Zlanca}/{name?MIHAN}/{old?35}',
+        name: 'app_person_update'
+    )]
+    public function update(Person $person = null, $firstname, $name, $old): RedirectResponse
+    {
+        if (!$person)
+        {
+            $this->addFlash('error', "Impossible d'effectuer cette action");
+        }else
+        {
+            $person = $this->personService->update($firstname, $name, $old, null, $person);
+            $this->addFlash('success', 'Modification effectuée avec succes');
+        }
+        return $this->redirectToRoute('app_person_all');
+    }
+
+    /**
+        Récupère toutes les persons
+     **/
     #[Route('/all', name: 'app_person_all')]
     public function index(): Response
     {
         $persons = $this->personRepository->findAll();
         return $this->render('person/index.html.twig', [
-            'persons' => $persons
+            'persons' => $persons,
+            'isPaginated' => false
         ]);
     }
 
