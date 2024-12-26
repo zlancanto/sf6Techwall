@@ -74,11 +74,21 @@ class PersonController extends AbstractController
     }
 
     #[Route('/all/old/{oldMin<\d+>?1}/{oldMax<\d+>?100}', name: 'app_person_by_old_interval')]
-    public function findOldByInterval($oldMin, $oldMax): Response
+    public function findByOdlInterval($oldMin, $oldMax): Response
     {
         $persons = $this->personRepository->findByOldInterval($oldMin, $oldMax);
         return $this->render('person/index.html.twig', [
             'persons' => $persons
+        ]);
+    }
+
+    #[Route('/stats/old/{oldMin<\d+>?1}/{oldMax<\d+>?100}', name: 'app_person_by_stats_old_interval')]
+    public function findByStatOdlInterval($oldMin, $oldMax): Response
+    {
+        $stats = $this->personRepository->statsByOldInterval($oldMin, $oldMax);
+        //$stats[0]['avgOld'] = round($stats[0]['avgOld']);
+        return $this->render('person/stats-person.html.twig', [
+            'stats' => $stats[0]
         ]);
     }
 

@@ -1,0 +1,12 @@
+{% extends 'template.html.twig' %}
+
+{% block title %}Stats{% endblock %}
+
+{% block bodyTitle %} Stats Persons {% endblock %}
+
+{% block body %}
+    <div>
+       <h4>Old average = {{ stats['avgOld'] }}</h4>
+       <h4>Total = {{ stats['countPersons'] }}</h4>
+   </div>
+{% endblock %}
