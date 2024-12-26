@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\Form\PersonType;
 use App\Repository\PersonRepository;
 use App\service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,9 +22,13 @@ class PersonController extends AbstractController
     #[Route('/add', name: 'app_person_add')]
     public function add(): Response
     {
-        $person = $this->personService->create('Zlanca-Nto', 'MIHAN', 44);
-        return $this->render('person/person.html.twig', [
-            'person' => $person,
+        $person = new Person();
+        /* $person est l'image de notre formulairex */
+        $formPerson = $this->createForm(PersonType::class, $person);
+
+        //$person = $this->personService->create('Zlanca-Nto', 'MIHAN', 44);
+        return $this->render('person/add-person.html.twig', [
+            'formPerson' => $formPerson->createView()
         ]);
     }
 
