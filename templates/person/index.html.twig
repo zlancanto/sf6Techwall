@@ -36,7 +36,7 @@
             {% endfor %}
         </table>
     </div>
-    {% if isPaginated %}
+    {% if isPaginated is defined and isPaginated %}
         <nav aria-label="...">
             <ul class="pagination">
                 {% if page != 1 %}

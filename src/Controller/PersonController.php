@@ -44,7 +44,11 @@ class PersonController extends AbstractController
     #[Route('/update/{id<\d+>}/{firstname?Zlanca}/{name?MIHAN}/{old?35}',
         name: 'app_person_update'
     )]
-    public function update(Person $person = null, $firstname, $name, $old): RedirectResponse
+    public function update(Person $person = null,
+        $firstname,
+        $name,
+        $old
+    ): RedirectResponse
     {
         if (!$person)
         {
@@ -65,8 +69,16 @@ class PersonController extends AbstractController
     {
         $persons = $this->personRepository->findAll();
         return $this->render('person/index.html.twig', [
-            'persons' => $persons,
-            'isPaginated' => false
+            'persons' => $persons
+        ]);
+    }
+
+    #[Route('/all/old/{oldMin<\d+>?1}/{oldMax<\d+>?100}', name: 'app_person_by_old_interval')]
+    public function findOldByInterval($oldMin, $oldMax): Response
+    {
+        $persons = $this->personRepository->findByOldInterval($oldMin, $oldMax);
+        return $this->render('person/index.html.twig', [
+            'persons' => $persons
         ]);
     }
 
