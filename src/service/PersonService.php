@@ -5,11 +5,11 @@ namespace App\service;
 use App\Entity\Person;
 use Doctrine\ORM\EntityManagerInterface;
 
-class PersonService
+readonly class PersonService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly PersonMapper $personMapper
+        private EntityManagerInterface $entityManager,
+        private PersonMapper $personMapper
     ){}
 
     public function create(string $firstName,
@@ -18,6 +18,13 @@ class PersonService
         ?string $job = null): Person
     {
         $person = $this->personMapper->map($firstName, $name, $old, $job);
+        $this->entityManager->persist($person);
+        $this->entityManager->flush();
+        return $person;
+    }
+
+    public function createOrUpdateWithPerson(Person $person): Person
+    {
         $this->entityManager->persist($person);
         $this->entityManager->flush();
         return $person;
@@ -37,8 +44,8 @@ class PersonService
         string $firstName,
         string $name,
         int $old,
-        ?string $job = null,
-        ?Person $person
+        ?Person $person,
+        ?string $job = null
     ): ?Person
     {
         if ($person)

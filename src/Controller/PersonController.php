@@ -8,6 +8,7 @@ use App\Repository\PersonRepository;
 use App\service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -19,20 +20,40 @@ class PersonController extends AbstractController
         private readonly PersonRepository $personRepository
     ){}
 
-    #[Route('/add', name: 'app_person_add')]
-    public function add(): Response
+    #[Route('/edit/{id<\d+>?0}', name: 'app_person_edit')]
+    public function add(Request $request, Person $person = null): Response
     {
-        $person = new Person();
+        if (!$person)
+        {
+            $person = new Person();
+            $updateMessage = 'Person created successfully !';
+        }
+        else
+        {
+            $updateMessage = 'Person updated successfully !';
+        }
         /* $person est l'image de notre formulairex */
         $formPerson = $this->createForm(PersonType::class, $person);
         $formPerson->remove('createdAt')
             ->remove('updatedAt')
         ;
-
-        //$person = $this->personService->create('Zlanca-Nto', 'MIHAN', 44);
-        return $this->render('person/add-person.html.twig', [
-            'formPerson' => $formPerson->createView()
-        ]);
+        /* Mon formulaire ira traiter la requête */
+        $formPerson->handleRequest($request);
+        if ($formPerson->isSubmitted() && $formPerson->isValid())
+        {
+            /*
+             * Au cas où person n'était pas l'image de $form
+             * $data = $formPerson->getData();
+             * */
+            $this->personService->createOrUpdateWithPerson($person);
+            $this->addFlash('success', $updateMessage);
+            return $this->redirectToRoute('app_person_all');
+        }else
+        {
+            return $this->render('person/add-person.html.twig', [
+                'formPerson' => $formPerson->createView()
+            ]);
+        }
     }
 
     #[Route('/delete/{id<\d+>}', name: 'app_person_delete')]
@@ -50,12 +71,12 @@ class PersonController extends AbstractController
     }
 
     #[Route('/update/{id<\d+>}/{firstname?Zlanca}/{name?MIHAN}/{old?35}',
-        name: 'app_person_update'
+        name: 'app_person_update_by_uri'
     )]
-    public function update(Person $person = null,
-        $firstname,
+    public function update($firstname,
         $name,
-        $old
+        $old,
+        Person $person = null
     ): RedirectResponse
     {
         if (!$person)
@@ -63,7 +84,7 @@ class PersonController extends AbstractController
             $this->addFlash('error', "Impossible d'effectuer cette action");
         }else
         {
-            $person = $this->personService->update($firstname, $name, $old, null, $person);
+            $this->personService->update($firstname, $name, $old, null, $person);
             $this->addFlash('success', 'Modification effectuée avec succes');
         }
         return $this->redirectToRoute('app_person_all');
@@ -131,7 +152,7 @@ class PersonController extends AbstractController
             4,
             2
         );*/
-        $nombrePersons = $this->personRepository->count([]);
+        $nombrePersons = $this->personRepository->count();
         $nombrePages = ceil($nombrePersons / $number);
         $persons = $this->personRepository->findBy([],
             ['firstname' => 'ASC', 'name' => 'ASC'],
