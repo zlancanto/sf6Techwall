@@ -5,7 +5,8 @@ namespace App\Controller;
 use App\Entity\Person;
 use App\Form\PersonType;
 use App\Repository\PersonRepository;
-use App\service\PersonService;
+use App\Service\FileUploader;
+use App\Service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class PersonController extends AbstractController
     ){}
 
     #[Route('/edit/{id<\d+>?0}', name: 'app_person_edit')]
-    public function add(Request $request, Person $person = null): Response
+    public function add(Request $request, FileUploader $fileUploader = null, Person $person = null): Response
     {
         if (!$person)
         {
@@ -41,6 +42,12 @@ class PersonController extends AbstractController
         $formPerson->handleRequest($request);
         if ($formPerson->isSubmitted() && $formPerson->isValid())
         {
+            /** @var UploadedFile $imageFile */
+            $imageFile = $formPerson->get('image')->getData();
+            if ($imageFile) {
+                $imageFileName = $fileUploader->upload($imageFile);
+                $person->setImage($imageFileName);
+            }
             /*
              * Au cas où person n'était pas l'image de $form
              * $data = $formPerson->getData();

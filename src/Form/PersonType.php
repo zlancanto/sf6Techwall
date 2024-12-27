@@ -10,9 +10,11 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class PersonType extends AbstractType
 {
@@ -50,6 +52,22 @@ class PersonType extends AbstractType
             ->add('job', EntityType::class, [
                 'class' => Job::class,
                 'choice_label' => 'designation',
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Photo de profile',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                  new File([
+                      'maxSize' => '1024k',
+                      'mimeTypes' => [
+                          'image/jpeg',
+                          'image/png',
+                          'image/gif',
+                      ],
+                      'mimeTypesMessage' => 'Please upload a valid image',
+                  ])
+                ],
             ])
             ->add('Ok', SubmitType::class)
         ;
