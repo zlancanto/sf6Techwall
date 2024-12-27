@@ -5,7 +5,7 @@
 {% block bodyTitle %} Create a new Person {% endblock %}
 
 {% block body %}
-    {{ form_start(formPerson) }}
+    {{ form_start(formPerson, {attr: {novalidate: 'novalidate'}}) }}
     <div class="row">
         <div class="col-8">{{ form_row(formPerson.firstname) }}</div>
         <div class="col">{{ form_row(formPerson.name) }}</div>
