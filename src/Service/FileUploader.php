@@ -8,6 +8,12 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 readonly class FileUploader
 {
+    /*
+     * Au niveau des Services, l'injection de dépendance
+     * se fait UNIQUEMENT dans le constructeur
+     * Ref : Youtube chaine 'Tech Wall' playlist sur symfony vidéos 51&52
+     * */
+
     public function __construct(
         private string $targetDirectory,
         private SluggerInterface $slugger,

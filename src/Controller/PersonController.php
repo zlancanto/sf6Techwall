@@ -16,6 +16,12 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/person')]
 class PersonController extends AbstractController
 {
+    /*
+     * Au niveau des controllers, l'injection de dépendance
+     * peut se faire directement dans le constructeur
+     * ou dans les params de method
+     * */
+
     public function __construct(
         private readonly PersonService  $personService,
         private readonly PersonRepository $personRepository
