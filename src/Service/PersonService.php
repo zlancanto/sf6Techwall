@@ -15,7 +15,8 @@ readonly class PersonService
     public function create(string $firstName,
         string $name,
         int $old,
-        ?string $job = null): Person
+        ?string $job = null
+    ): Person
     {
         $person = $this->personMapper->map($firstName, $name, $old, $job);
         $this->entityManager->persist($person);

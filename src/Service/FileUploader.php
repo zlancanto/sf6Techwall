@@ -12,6 +12,9 @@ readonly class FileUploader
      * Au niveau des Services, l'injection de dépendance
      * se fait UNIQUEMENT dans le constructeur
      * Ref : Youtube chaine 'Tech Wall' playlist sur symfony vidéos 51&52
+     *
+     * Un Service est une classe qui fournit des services. C'est aussi
+     * simple que ça
      * */
 
     public function __construct(
@@ -35,7 +38,7 @@ readonly class FileUploader
         return $fileName;
     }
 
-    private function getTargetDirectory(): string
+    public function getTargetDirectory(): string
     {
         return $this->targetDirectory;
     }

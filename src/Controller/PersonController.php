@@ -6,11 +6,13 @@ use App\Entity\Person;
 use App\Form\PersonType;
 use App\Repository\PersonRepository;
 use App\Service\FileUploader;
+use App\Service\MailerService;
 use App\Service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/person')]
@@ -24,20 +26,24 @@ class PersonController extends AbstractController
 
     public function __construct(
         private readonly PersonService  $personService,
-        private readonly PersonRepository $personRepository
+        private readonly PersonRepository $personRepository,
+        private readonly MailerService $mailerService
     ){}
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     #[Route('/edit/{id<\d+>?0}', name: 'app_person_edit')]
     public function add(Request $request, FileUploader $fileUploader = null, Person $person = null): Response
     {
         if (!$person)
         {
             $person = new Person();
-            $updateMessage = 'Person created successfully !';
+            $personMessage = 'Person created successfully !';
         }
         else
         {
-            $updateMessage = 'Person updated successfully !';
+            $personMessage = 'Person updated successfully !';
         }
         /* $person est l'image de notre formulairex */
         $formPerson = $this->createForm(PersonType::class, $person);
@@ -55,11 +61,16 @@ class PersonController extends AbstractController
                 $person->setImage($imageFileName);
             }
             /*
-             * Au cas où person n'était pas l'image de $form
+             * Au cas où person n'était pas l'image de $form? on aurait fait :
              * $data = $formPerson->getData();
              * */
+            //dd($request);
             $this->personService->createOrUpdateWithPerson($person);
-            $this->addFlash('success', $updateMessage);
+            $this->addFlash('success', $personMessage);
+            $mailMessage = $person->getFirstname().' '.$person->getName().' '.$personMessage;
+            $this->mailerService->sendEmail(to: 'mihanzlancanto@gmail.com',
+                subject: $mailMessage
+            );
             return $this->redirectToRoute('app_person_all');
         }else
         {
