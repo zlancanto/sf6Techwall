@@ -7,6 +7,7 @@ use App\Form\PersonType;
 use App\Repository\PersonRepository;
 use App\Service\FileUploader;
 use App\Service\MailerService;
+use App\Service\PdfService;
 use App\Service\PersonService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,7 +35,10 @@ class PersonController extends AbstractController
      * @throws TransportExceptionInterface
      */
     #[Route('/edit/{id<\d+>?0}', name: 'app_person_edit')]
-    public function add(Request $request, FileUploader $fileUploader = null, Person $person = null): Response
+    public function add(Request $request,
+        FileUploader $fileUploader = null,
+        Person $person = null
+    ): Response
     {
         if (!$person)
         {
@@ -78,6 +82,17 @@ class PersonController extends AbstractController
                 'formPerson' => $formPerson->createView()
             ]);
         }
+    }
+    
+    #[Route('/pdf/{id<\d+>}', name: 'app_person_pdf')]
+    public function generatePdf(PdfService $pdfService,
+        Person $person = null
+    ): void
+    {
+        $html = $this->renderView('person/person-by-id.html.twig', [
+            'person' => $person
+        ]);
+        $pdfService->showPdfFile($html);
     }
 
     #[Route('/delete/{id<\d+>}', name: 'app_person_delete')]
