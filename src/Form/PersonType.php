@@ -37,21 +37,32 @@ class PersonType extends AbstractType
                     return $er->createQueryBuilder('p')
                         ->orderBy('p.socialNetwork', 'ASC');
                 },
+                'attr' => [
+                    'class' => 'select2-search-for-single-selection',
+                ],
             ])
             ->add('hobbies', EntityType::class, [
                 'class' => Hobby::class,
                 'choice_label' => 'designation',
+                'required' => false,
                 /* Form Type Symfony */
-                'expanded' => true,
+                'expanded' => false,
                 'multiple' => true,
                 'query_builder' => function (EntityRepository $er): QueryBuilder {
                     return $er->createQueryBuilder('h')
                         ->orderBy('h.designation', 'ASC');
                 },
+                'attr' => [
+                    'class' => 'select2-search-for-multiple-selection',
+                ],
             ])
             ->add('job', EntityType::class, [
                 'class' => Job::class,
                 'choice_label' => 'designation',
+                'required' => false,
+                'attr' => [
+                    'class' => 'select2-search-for-single-selection',
+                ],
             ])
             ->add('image', FileType::class, [
                 'label' => 'Photo de profile',
