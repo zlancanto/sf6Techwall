@@ -10,6 +10,7 @@ readonly class MailerService
 {
     public function __construct(private MailerInterface $mailer,
         private string $fromMailer,
+        private string $replyTo,
     ){}
 
     /**
@@ -25,6 +26,7 @@ readonly class MailerService
         $email = (new Email())
             ->from($this->getFromMailer())
             ->to($to)
+            ->replyTo($this->replyTo)
             ->priority($priority)
             ->subject($subject)
             ->text($text)
@@ -33,10 +35,5 @@ readonly class MailerService
         $this->mailer->send($email);
 
         // ...
-    }
-
-    public function getFromMailer(): string
-    {
-        return $this->fromMailer;
     }
 }
