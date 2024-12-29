@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -9,8 +10,8 @@ use Symfony\Component\Mime\Email;
 readonly class MailerService
 {
     public function __construct(private MailerInterface $mailer,
-        private string $fromMailer,
         private string $replyTo,
+        private string $fromMailer,
     ){}
 
     /**
@@ -24,7 +25,7 @@ readonly class MailerService
     ): void
     {
         $email = (new Email())
-            ->from($this->getFromMailer())
+            ->from($this->fromMailer)
             ->to($to)
             ->replyTo($this->replyTo)
             ->priority($priority)
@@ -35,5 +36,10 @@ readonly class MailerService
         $this->mailer->send($email);
 
         // ...
+    }
+
+    public function getUser(): User
+    {
+        return $this->getUser();
     }
 }

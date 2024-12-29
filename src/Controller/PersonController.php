@@ -101,6 +101,7 @@ class PersonController extends AbstractController
         if (!$person)
         {
             $this->addFlash('error', "Impossible d'effectuer cette action");
+            $person->setCreatedBy($this->getUser());
         }else
         {
             $this->personService->delete($person);
