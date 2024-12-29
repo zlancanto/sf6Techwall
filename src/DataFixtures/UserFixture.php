@@ -36,6 +36,10 @@ class UserFixture extends Fixture implements FixtureGroupInterface
         $manager->flush();
     }
 
+    /*
+     * Pour l'exécution unique du fixture
+     * php bin/console doctrine:fixtures:load --group=group1 --group=group2
+     * */
     public static function getGroups(): array
     {
         return ['user'];
