@@ -1,3 +1,5 @@
+# 'symfony console debug:config security' pour connaître tous les params
+# de config associés à ce fichiers
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
@@ -20,7 +22,7 @@ security:
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_login
 
             remember_me:
                 secret: '%kernel.secret%'
