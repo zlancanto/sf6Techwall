@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/person')]
 class PersonController extends AbstractController
@@ -40,6 +41,8 @@ class PersonController extends AbstractController
         Person $person = null
     ): Response
     {
+        /* For authorization at this route  */
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         if (!$person)
         {
             $person = new Person();
@@ -133,7 +136,10 @@ class PersonController extends AbstractController
     /**
         Récupère toutes les persons
      **/
-    #[Route('/all', name: 'app_person_all')]
+    #[
+        Route('/all', name: 'app_person_all'),
+        IsGranted('ROLE_USER')
+    ]
     public function index(): Response
     {
         $persons = $this->personRepository->findAll();

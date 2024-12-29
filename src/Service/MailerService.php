@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -10,6 +11,7 @@ use Symfony\Component\Mime\Email;
 readonly class MailerService
 {
     public function __construct(private MailerInterface $mailer,
+        private Security $security,
         private string $replyTo,
         private string $fromMailer,
     ){}
@@ -38,8 +40,16 @@ readonly class MailerService
         // ...
     }
 
-    public function getUser(): User
+    /* Utilisation des roles dans un Service */
+    private function getUser(): User |null
     {
-        return $this->getUser();
+        if ($this->security->isGranted('ROLE_ADMIN'))
+        {
+            return $this->getUser();
+        }
+        else
+        {
+            return new User();
+        }
     }
 }
