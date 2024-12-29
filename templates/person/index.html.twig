@@ -12,8 +12,10 @@
                 <th>Name</th>
                 <th>Old</th>
                 <th>Détail</th>
-                <th>Mise à jour</th>
-                <th>Suppression</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>Mise à jour</th>
+                    <th>Suppression</th>
+                {% endif %}
             </tr>
             {% for person in persons %}
                 <tr>
@@ -25,16 +27,18 @@
                             <i class="bi bi-info-circle-fill"></i>
                         </a>
                     </td>
-                    <td>
-                        <a class="page-link" href="{{ path('app_person_edit', {id: person.id}) }}">
-                            <i class="bi bi-pen-fill"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="page-link" href="{{ path('app_person_delete', {id: person.id}) }}">
-                            <i class="bi bi-trash3-fill"></i>
-                        </a>
-                    </td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td>
+                            <a class="page-link" href="{{ path('app_person_edit', {id: person.id}) }}">
+                                <i class="bi bi-pen-fill"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a class="page-link" href="{{ path('app_person_delete', {id: person.id}) }}">
+                                <i class="bi bi-trash3-fill"></i>
+                            </a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>

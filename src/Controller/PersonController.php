@@ -17,7 +17,10 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/person')]
+#[
+    Route('/person'),
+    IsGranted('ROLE_USER')
+]
 class PersonController extends AbstractController
 {
     /*
@@ -98,7 +101,10 @@ class PersonController extends AbstractController
         $pdfService->showPdfFile($html);
     }
 
-    #[Route('/delete/{id<\d+>}', name: 'app_person_delete')]
+    #[
+        Route('/delete/{id<\d+>}', name: 'app_person_delete'),
+        IsGranted('ROLE_ADMIN')
+    ]
     public function delete(Person $person = null): RedirectResponse
     {
         if (!$person)
