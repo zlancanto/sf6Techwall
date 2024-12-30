@@ -35,7 +35,6 @@ class PersonController extends AbstractController
     public function __construct(
         private readonly PersonService  $personService,
         private readonly PersonRepository $personRepository,
-        private readonly MailerService $mailerService,
         private readonly EventDispatcherInterface $dispatcher,
     ){}
 
@@ -92,10 +91,6 @@ class PersonController extends AbstractController
                 );
             }
             $this->addFlash('success', $personMessage);
-            $mailMessage = $person->getFirstname().' '.$person->getName().' '.$personMessage;
-            $this->mailerService->sendEmail(to: 'mihanzlancanto@gmail.com',
-                subject: $mailMessage
-            );
             return $this->redirectToRoute('app_person_all');
         }else
         {
