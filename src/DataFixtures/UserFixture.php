@@ -16,18 +16,22 @@ class UserFixture extends Fixture implements FixtureGroupInterface
 
     public function load(ObjectManager $manager): void
     {
-        $admin1 = (new User())->setUsername('zlancanto1')
+        $admin1 = (new User())->setUsername('admin1')
             ->setRoles(['ROLE_ADMIN'])
+            ->setEmail('admin1@test.com')
         ;
-        $admin1->setPassword($this->hasher->hashPassword($admin1, 'admin1'));
-        $admin2 = (new User())->setUsername('zlancanto2')
+        $admin1->setPassword($this->hasher->hashPassword($admin1, 'admin'));
+        $admin2 = (new User())->setUsername('admin2')
             ->setRoles(['ROLE_ADMIN'])
+            ->setEmail('admin2@test.com')
         ;
-        $admin2->setPassword($this->hasher->hashPassword($admin2, 'admin2'));
+        $admin2->setPassword($this->hasher->hashPassword($admin2, 'admin'));
 
         for ($i = 0; $i < 5; $i++)
         {
-            $user = (new User())->setUsername('user'.$i);
+            $user = (new User())->setUsername('user'.$i)
+                ->setEmail('user'.$i.'@test.com')
+            ;
             $user->setPassword($this->hasher->hashPassword($user, 'user'));
             $manager->persist($user);
         }

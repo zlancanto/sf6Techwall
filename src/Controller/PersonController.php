@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use App\Event\AddPersonEvent;
+use App\Event\ListAllPersonEvent;
 use App\Form\PersonType;
 use App\Repository\PersonRepository;
 use App\Service\FileUploader;
@@ -60,7 +61,7 @@ class PersonController extends AbstractController
         {
             $personMessage = 'Person updated successfully !';
         }
-        /* $person est l'image de notre formulairex */
+        /* $person est l'image de notre formulaire */
         $formPerson = $this->createForm(PersonType::class, $person);
         $formPerson->remove('createdAt')
             ->remove('updatedAt')
@@ -163,6 +164,10 @@ class PersonController extends AbstractController
     public function index(): Response
     {
         $persons = $this->personRepository->findAll();
+        $listAllPersonEvent = new ListAllPersonEvent(count($persons));
+        $this->dispatcher->dispatch($listAllPersonEvent,
+            ListAllPersonEvent::LIST_ALL_PERSON_EVENT
+        );
         return $this->render('person/index.html.twig', [
             'persons' => $persons
         ]);

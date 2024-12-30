@@ -33,5 +33,13 @@ services:
             $fromMailer: 'zlancanto.sender.mail@gmail.com'
             $replyTo: 'zlancanto.sender.mail@gmail.com'
 
+    App\EventListener\PersonListener:
+        tags:
+            - { name: kernel.event_listener, event: person.add }
+            - {
+                name: kernel.event_listener,
+                event: person.list_all,
+                method: onPersonListAll
+            }
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
