@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\Event\AddPersonEvent;
 use App\Form\PersonType;
 use App\Repository\PersonRepository;
 use App\Service\FileUploader;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[
     Route('/person'),
@@ -32,7 +34,8 @@ class PersonController extends AbstractController
     public function __construct(
         private readonly PersonService  $personService,
         private readonly PersonRepository $personRepository,
-        private readonly MailerService $mailerService
+        private readonly MailerService $mailerService,
+        private readonly EventDispatcherInterface $dispatcher,
     ){}
 
     /**
@@ -46,10 +49,12 @@ class PersonController extends AbstractController
     {
         /* For authorization at this route  */
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $newPerson = false;
         if (!$person)
         {
             $person = new Person();
             $personMessage = 'Person created successfully !';
+            $newPerson = true;
         }
         else
         {
@@ -76,6 +81,15 @@ class PersonController extends AbstractController
              * */
             //dd($request);
             $this->personService->createOrUpdateWithPerson($person);
+            if ($newPerson)
+            {
+                /* On cré notre event */
+                $addPersonEvent = new AddPersonEvent($person);
+                /* On va maintenant le dispatcher */
+                $this->dispatcher->dispatch($addPersonEvent,
+                    AddPersonEvent::ADD_PERSON_EVENT
+                );
+            }
             $this->addFlash('success', $personMessage);
             $mailMessage = $person->getFirstname().' '.$person->getName().' '.$personMessage;
             $this->mailerService->sendEmail(to: 'mihanzlancanto@gmail.com',
