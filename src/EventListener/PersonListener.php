@@ -4,8 +4,10 @@ namespace App\EventListener;
 
 use App\Event\AddPersonEvent;
 use App\Event\ListAllPersonEvent;
+use App\Kernel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 readonly class PersonListener
 {
@@ -28,4 +30,10 @@ readonly class PersonListener
     {
         $this->logger->debug("TotalPersons = ".$event->getNumberPerson());
     }
+
+    /*#[AsEventListener(event: 'kernel.request', priority: -5000)]
+    public function logKernelRequest(KernelEvent $event): void
+    {
+        dd($event->getRequest());
+    }*/
 }
